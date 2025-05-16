@@ -40,15 +40,41 @@
       width: 100%;
       overflow: hidden;
       z-index: 2;
-      clip-path: inset(0 0 0 50%);
+      clip-path: inset(0 0 0 30%);
       pointer-events: none; /* prevent video interaction */
     }
 
-    .video-right video {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
+   .video-right {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  z-index: 2;
+  clip-path: inset(0 0 0 30%);
+  pointer-events: none;
+}
+
+.video-fallback,
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease;
+}
+
+.hero-video {
+  opacity: 0; /* Start hidden */
+  z-index: 2;
+}
+
+.video-fallback {
+  z-index: 1;
+}
 
     .divider {
       position: absolute;
@@ -56,7 +82,7 @@
       bottom: 0;
       width: 4px;
       background-color: red;
-      left: 50%;
+      left: 30%;
       transform: translateX(-50%);
       cursor: ew-resize;
       z-index: 4;
@@ -69,11 +95,11 @@
 
     .logo-btn {
       position: relative;
-      bottom: 80px;
+      bottom: 20px;
     }
 
     .logo-btn img {
-      height: 50px;
+      height: 60px;
       width: auto;
       pointer-events: none;
       background: transparent; /* removed bg */
@@ -84,6 +110,31 @@
         height: 40px;
       }
     }
+
+.arrow {
+  font-size: 35px;
+  color: #fff;
+  margin: 0 8px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.left-arrow {
+  margin-right: 6px;
+}
+
+.right-arrow {
+  margin-left: 6px;
+}
+
+.logo-btn {
+  position: relative;
+  bottom: 40px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
   </style>
 </head>
 <body>
@@ -91,16 +142,22 @@
     <div class="image-left"></div>
 
     <div class="video-right" id="videoRight">
-      <video autoplay muted loop playsinline>
-        <source src="your-video.mp4" type="video/mp4" /> <!-- 🔁 Replace -->
-        Your browser does not support the video tag.
-      </video>
-    </div>
+  <!-- Fallback image -->
+  <img src="your-fallback-image.jpg" alt="Fallback" class="video-fallback" id="videoFallback">
+
+  <!-- Actual video -->
+  <video autoplay muted loop playsinline id="heroVideo" class="hero-video">
+    <source src="your-video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
     <div class="divider" id="divider">
-      <div class="logo-btn">
-        <img src="your-logo.png" alt="Logo"> <!-- 🔁 Replace -->
-      </div>
+     <div class="logo-btn">
+  <span class="arrow left-arrow">←</span>
+  <img src="your-logo.png" alt="Logo">
+  <span class="arrow right-arrow">→</span>
+</div>
     </div>
   </div>
 
@@ -136,6 +193,14 @@
     window.addEventListener('load', () => {
       setTimeout(() => updateDivider(window.innerWidth * 0.3), 200);
     });
+
+   const heroVideo = document.getElementById('heroVideo');
+   const videoFallback = document.getElementById('videoFallback');
+
+   heroVideo.addEventListener('canplaythrough', () => {
+   heroVideo.style.opacity = '1';
+   });
+ 
   </script>
 </body>
 </html>
